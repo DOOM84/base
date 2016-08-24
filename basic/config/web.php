@@ -6,6 +6,11 @@ $config = [
     'id' => 'basic',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
+    'layout' => 'basic',
+    'defaultRoute' => 'main/index',
+    'language' => 'ru_RU',
+    'charset' => 'UTF-8',
+    'name' => 'Yii2 приложение',
     'components' => [
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
