@@ -1,5 +1,10 @@
 <?php
 use app\assets\AppAsset;
+use yii\bootstrap\NavBar;
+use yii\bootstrap\Nav;
+use yii\bootstrap\Modal;
+use yii\bootstrap\Activeform;
+use yii\helpers\Html;
 /* 
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -20,9 +25,109 @@ $this->beginPage();
     </head>
     <body>
         <?php $this->beginBody(); ?>
-        <p>Верхняя часть сайта</p>
-        <?= $content?>
-        <p>Нижняя часть сайта</p>
+        <div class="wrap">
+           <?php
+           Navbar::begin(
+                   [
+                       'brandLabel' => 'Тестовое приложение',
+                       
+                   ]
+                   );
+           
+           
+           echo Nav::widget([
+               'items' => [
+//                   [
+//                       'label' => 'Главная <span class="glyphicon glyphicon-home"></span>',
+//                   'url' => ['main/index']
+//                       ],
+                   [
+                       'label' => 'Из коробки <span class="glyphicon glyphicon-inbox"></span>',
+                    'items' => [
+                   '<li class = "dropdown-header">Расширения</li>',
+                   '<li class = "divider"></li>',
+                       
+                       [
+                           'label' => 'Перейти к просмотру',
+                           'url' => ['widget-test/index']
+                       ]
+                   ]
+                       ],
+                    [
+                       'label' => 'О проекте <span class="glyphicon glyphicon-question-sign"></span>',
+                   'url' => ['#'],
+                       'linkOptions' => [
+                           'data-toggle' => 'modal',
+                           'data-target' => '#modal',
+                           'style' => 'cursor:pointer; outline: none;'
+                           
+                       ], 
+                       ],
+                   [
+                       'label' => 'Регистрация',
+                       'url' => ['main/reg'],
+                   ],
+                    [
+                       'label' => 'Войти',
+                       'url' => ['main/login'],
+                   ]
+               ],
+               'activateParents' => true,
+               'encodeLabels' => false,
+               'options' => [
+                   'class' => 'navbar-nav navbar-right'
+                   ]
+           ]);
+           Modal::begin([
+               'header' => '<h2>DOOM<h2>',
+               'id' => 'modal'
+           ]);
+           echo 'Проект для продвинутых PHP разработчиков';
+           Modal::end();
+           
+           ActiveForm::begin(
+                   [
+                       'action' => ['main/search'],
+                       'method' => 'post',
+                       'options' => [
+                           'class' => 'navbar-form navbar-right'
+                           ]
+                   ]
+                   );
+           echo '<div class="input-group input-group-sm">';
+           echo Html::input(
+                   'type: text',
+                   'search',
+                   '',
+                   ['placeholder' => 'Найти...',
+                       'class' => 'form-control']
+                   );
+           echo '<span class="input-group-btn">';
+           echo Html::submitButton(
+                  '<span class="glyphicon glyphicon-search"></span>', 
+           ['class' => 'btn btn-success']
+                   );
+           echo '</span></div>';
+           ActiveForm::end();
+           
+           Navbar::end();
+           ?>
+            <div class="container">
+                <?= $content;?>
+                
+            </div>  
+        </div>
+        
+        <footer class="footer">
+            <div class="container">
+                <span class="badge">
+                    <span class="glyphicon glyphicon-copyright-mark"></span> 
+                    DOOM <?= date("Y")?>
+                </span>
+            </div>
+        </footer>
+        
+       
         <?php $this->endBody(); ?>
     </body>
 </html>
