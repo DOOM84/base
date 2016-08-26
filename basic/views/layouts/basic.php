@@ -3,8 +3,9 @@ use app\assets\AppAsset;
 use yii\bootstrap\NavBar;
 use yii\bootstrap\Nav;
 use yii\bootstrap\Modal;
-use yii\bootstrap\Activeform;
+use yii\bootstrap\ActiveForm;
 use yii\helpers\Html;
+use app\components\AlertWidget;
 /* 
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -18,6 +19,7 @@ $this->beginPage();
 <!doctype html>
 <html lang="<?= Yii::$app->language?>">
     <head>
+        <?= Html::csrfMetaTags()?>
         <meta charset="<?= Yii::$app->charset?>">
         <?php $this->registerMetaTag(['name' => 'viewport', 'content' => 'width=device-width, initial-scale=1']) ?>
         <title><?= Yii::$app->name?></title>
@@ -27,21 +29,15 @@ $this->beginPage();
         <?php $this->beginBody(); ?>
         <div class="wrap">
            <?php
-           Navbar::begin(
+            Navbar::begin(
                    [
                        'brandLabel' => 'Тестовое приложение',
                        
                    ]
                    );
-           
-           
-           echo Nav::widget([
-               'items' => [
-//                   [
-//                       'label' => 'Главная <span class="glyphicon glyphicon-home"></span>',
-//                   'url' => ['main/index']
-//                       ],
-                   [
+            
+            $menuItems = [
+                [
                        'label' => 'Из коробки <span class="glyphicon glyphicon-inbox"></span>',
                     'items' => [
                    '<li class = "dropdown-header">Расширения</li>',
@@ -49,7 +45,7 @@ $this->beginPage();
                        
                        [
                            'label' => 'Перейти к просмотру',
-                           'url' => ['widget-test/index']
+                           'url' => ['/widget-test/index']
                        ]
                    ]
                        ],
@@ -63,15 +59,27 @@ $this->beginPage();
                            
                        ], 
                        ],
-                   [
-                       'label' => 'Регистрация',
-                       'url' => ['main/reg'],
-                   ],
-                    [
-                       'label' => 'Войти',
-                       'url' => ['main/login'],
-                   ]
-               ],
+            ];
+           
+            if (Yii::$app->user->isGuest):
+                $menuItems[] = ['label' => 'Регистрация', 
+                    'url' => ['/main/reg']];
+             $menuItems[] = ['label' => 'Войти', 
+                 'url' => ['/main/login']];
+             else:
+               $menuItems[] = ['label' => 'Выйти('.Yii::$app->user->identity['username'].')',
+                   'url' => ['/main/logout'],
+                   'linkOptions' => ['data-method' => 'post']
+                   
+                               ];
+            endif;
+                
+                
+                
+                
+                
+           echo Nav::widget([
+               'items' => $menuItems,
                'activateParents' => true,
                'encodeLabels' => false,
                'options' => [
@@ -87,7 +95,7 @@ $this->beginPage();
            
            ActiveForm::begin(
                    [
-                       'action' => ['main/search'],
+                       'action' => ['/main/search'],
                        'method' => 'post',
                        'options' => [
                            'class' => 'navbar-form navbar-right'
